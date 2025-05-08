@@ -13,7 +13,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Handle add action
+// Handle add driver
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
     $name = $_POST['driverName'];
     $address = $_POST['address'];
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $stmt->close();
 }
 
-// Handle delete confirmation
+// Handle delete driver
 if (isset($_GET['action']) && $_GET['action'] === 'confirm_delete' && isset($_GET['driver_id'])) {
     $driver_id = intval($_GET['driver_id']);
     $sql = "DELETE FROM drivers WHERE driver_id = ?";
@@ -56,6 +56,36 @@ if (isset($_GET['action']) && $_GET['action'] === 'confirm_delete' && isset($_GE
 // Fetch all drivers
 $sql = "SELECT * FROM drivers";
 $result = $conn->query($sql);
+
+// Handle add fare
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fare_action']) && $_POST['fare_action'] === 'add') {
+    $vehicle_type = $_POST['fareVehicleType'];
+    $route = $_POST['fareRoute'];
+    $fare_amount = $_POST['fareAmount'];
+
+    $stmt = $conn->prepare("INSERT INTO fares (vehicle_type, route, fare_amount) VALUES (?, ?, ?)");
+    $stmt->bind_param("ssd", $vehicle_type, $route, $fare_amount);
+
+    if ($stmt->execute()) {
+        header("Location: crud.php");
+        exit;
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+    $stmt->close();
+}
+
+// Handle delete fare
+if (isset($_GET['action']) && $_GET['action'] === 'delete_fare' && isset($_GET['fare_id'])) {
+    $fare_id = intval($_GET['fare_id']);
+    $stmt = $conn->prepare("DELETE FROM fares WHERE fare_id = ?");
+    $stmt->bind_param("i", $fare_id);
+    $stmt->execute();
+    $stmt->close();
+}
+
+// Fetch all fares
+$fare_result = $conn->query("SELECT * FROM fares");
 ?>
 
 <!DOCTYPE html>
@@ -125,6 +155,7 @@ $result = $conn->query($sql);
             background: #fff;
             border-radius: 10px;
             overflow: hidden;
+            margin-bottom: 30px;
         }
 
         th, td {
@@ -271,6 +302,52 @@ $result = $conn->query($sql);
         <?php endif; ?>
         </tbody>
     </table>
+
+    <h2>Route List</h2>
+    <div class="form-container">
+        <form action="crud.php" method="POST">
+            <select name="fareVehicleType" required>
+                <option value="" disabled selected>Select Vehicle Type</option>
+                <option value="Jeep">Jeep</option>
+                <option value="Bao-Bao">Bao-Bao</option>
+                <option value="Motorcycle">Motorcycle</option>
+            </select>
+            <input type="text" name="fareRoute" placeholder="Route / Location" required>
+            <input type="number" step="0.01" name="fareAmount" placeholder="Fare Amount" required>
+            <input type="hidden" name="fare_action" value="add">
+            <button type="submit">Add Fare</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Vehicle Type</th>
+            <th>Route / Location</th>
+            <th>Fare</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php if ($fare_result && $fare_result->num_rows > 0): ?>
+            <?php while ($fare = $fare_result->fetch_assoc()): ?>
+                <tr>
+                    <td><?= htmlspecialchars($fare['vehicle_type']) ?></td>
+                    <td><?= htmlspecialchars($fare['route']) ?></td>
+                    <td>₱<?= number_format($fare['fare_amount'], 2) ?></td>
+                    <td class="action-buttons">
+                        <a href="view_fare.php?fare_id=<?= $fare['fare_id'] ?>" class="view-btn">View</a>
+                        <a href="edit_fare.php?fare_id=<?= $fare['fare_id'] ?>" class="update-btn">Edit</a>
+                        <a href="?action=delete_fare&fare_id=<?= $fare['fare_id'] ?>" class="delete-btn">Delete</a>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <tr><td colspan="4">No fare routes found.</td></tr>
+        <?php endif; ?>
+        </tbody>
+    </table>
+
 </div>
 
 <div id="deleteModal">
@@ -283,5 +360,6 @@ $result = $conn->query($sql);
 
 </body>
 </html>
+
 
 <?php $conn->close(); ?>

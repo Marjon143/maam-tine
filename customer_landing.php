@@ -47,8 +47,9 @@ $stmt->close();
 
       <section class="services">
         <div class="service"><img src="image/Graphicloads-100-Flat-2-Bus.64.png"><span>Vehicle</span></div>
-        <div class="service"><img src="image/Icons8-Windows-8-Transport-Driver.64.png"><span>Drivers</span></div>
-        <div class="service"><img src="image/Icons8-Windows-8-Very-Basic-Rating.64.png"><span>Ratings</span></div>
+        <a href="driver_info.php"><div class="service"><img src="image/Icons8-Windows-8-Transport-Driver.64.png" alt="Drivers"><span>Drivers</span></div></a>
+        <a href="driver_rating.php"><div class="service"><img src="image/Icons8-Windows-8-Very-Basic-Rating.64.png" alt="Ratings Icon"><span>Ratings</span></div></a>
+
       </section>
 
       <section class="booking-banner">
@@ -71,6 +72,7 @@ $stmt->close();
     font-size: 1.5rem;
     color: #333;
     margin-bottom: 15px;
+    text-align: center;
   }
 
   .activity-table {
@@ -82,9 +84,11 @@ $stmt->close();
   .activity-table th,
   .activity-table td {
     padding: 12px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
-  }
+    font-weight: bold;
+    font-size: 18px; /* Adjust this value as needed */
+}
 
   .activity-table th {
     font-weight: bold;
@@ -172,6 +176,121 @@ $stmt->close();
     $conn->close();
   ?>
 </section>
+<style>
+  .fare-route {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+
+  .fare-route h3 {
+    font-size: 1.5rem;
+    color: #0b5394;
+    margin-bottom: 15px;
+    text-align: center;
+    
+  }
+
+  .fare-table-container {
+    overflow-x: auto;
+  }
+
+  .fare-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .fare-table th,
+  .fare-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .fare-table th {
+    color: white;
+  }
+
+  /* Different header background colors */
+  .fare-table th:nth-child(1) {
+    background-color: #4CAF50; /* Green */
+  }
+
+  .fare-table th:nth-child(2) {
+    background-color: #2196F3; /* Blue */
+  }
+
+  .fare-table th:nth-child(3) {
+    background-color: #FF9800; /* Orange */
+  }
+
+  /* Different column background colors */
+  .fare-table td:nth-child(1) {
+    background-color: #e8f5e9; /* Light green */
+  }
+
+  .fare-table td:nth-child(2) {
+    background-color: #e3f2fd; /* Light blue */
+  }
+
+  .fare-table td:nth-child(3) {
+    background-color: #fff3e0; /* Light orange */
+  }
+
+  .fare-table tr:hover td {
+    background-color: #f1f1f1 !important;
+  }
+
+  .fare-table td {
+    color: #333;
+  }
+</style>
+
+<section class="fare-route">
+  <h3>Fare & Route Information</h3>
+  <div class="fare-table-container">
+    <?php
+      $conn = new mysqli("localhost", "root", "", "ecarga");
+      if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+      }
+
+      $sql = "SELECT vehicle_type, route, fare_amount FROM fares";
+      $result = $conn->query($sql);
+
+      if ($result->num_rows > 0): ?>
+        <table class="fare-table">
+          <thead>
+            <tr>
+              <th>Vehicle Type</th>
+              <th>Route</th>
+              <th>Fare (₱)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php while ($row = $result->fetch_assoc()): ?>
+              <tr>
+                <td><?php echo htmlspecialchars($row['vehicle_type']); ?></td>
+                <td><?php echo htmlspecialchars($row['route']); ?></td>
+                <td><?php echo number_format($row['fare_amount'], 2); ?></td>
+              </tr>
+            <?php endwhile; ?>
+          </tbody>
+        </table>
+      <?php else: ?>
+        <p>No fare information available.</p>
+      <?php endif;
+
+      $conn->close();
+    ?>
+  </div>
+</section>
+
+
 
 
 
@@ -182,7 +301,8 @@ $stmt->close();
       <div class="nav"><a href="bookings.php"><span>📅</span><p>Bookings</p></a></div>
       <div class="nav"><a href="history.php"><span>📜</span><p>History</p></a></div>
       <div class="nav"><a href="profile.php"><span>👤</span><p>Profile</p></a></div>
-      <div class="nav"><a href="rate.php"><span>👤</span><p>Rate</p></a></div>
+      <a href="user_rating_driver.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>👤</span><p style="margin: 0;">Rate</p></a>
+
     </footer>
 
     <script src="script.js"></script>
