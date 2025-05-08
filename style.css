@@ -1,0 +1,285 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f7fa;
+}
+
+header {
+  background: white;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-left h1 {
+  margin: 0;
+  font-size: 20px;
+  color: #0047ab;
+}
+
+.header-left span.beta {
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+.flag {
+  width: 30px;
+  margin-right: 10px;
+}
+
+main {
+  padding: 10px;
+}
+
+.welcome {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+.services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.service {
+  background: #e9f0fb;
+  border-radius: 15px;
+  padding: 10px;
+  text-align: center;
+  width: 70px;
+  position: relative;
+}
+
+.service img {
+  width: 30px;
+  margin-bottom: 5px;
+}
+
+.tag {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 10px;
+}
+
+.ejobs-banner {
+  background: #dce7f5;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.featured {
+  margin-top: 20px;
+}
+
+.cards {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.card {
+  flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.verify-box {
+  background: #222;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+  position: relative;
+}
+
+.verify-btn {
+  background: #007bff;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.nav {
+  text-align: center;
+  font-size: 14px;
+}
+
+.qr {
+  font-size: 24px;
+  background: #007bff;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  margin-top: -20px;
+}
+.services {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.service {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 16px;
+  text-align: center;
+  width: 150px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.service:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.service img {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 10px;
+}
+
+.service span {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+.booking-banner {
+  background-color: #ffffff;
+  margin: 20px;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.booking-banner h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.booking-banner p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.book-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.book-btn:hover {
+  background-color: #45a049;
+}
+.recent-activity {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.recent-activity h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.activity-table th,
+.activity-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.activity-table th {
+  font-weight: bold;
+}
+
+.activity-table th:nth-child(1) {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.activity-table th:nth-child(2) {
+  background-color: #2196F3;
+  color: white;
+}
+
+.activity-table th:nth-child(3) {
+  background-color: #FF9800;
+  color: white;
+}
+
+.activity-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.activity-table td {
+  color: #555;
+}
+
+.activity-table td:nth-child(3) {
+  font-weight: bold;
+}
+
+.recent-activity p {
+  color: #777;
+  font-size: 1rem;
+  font-style: italic;
+}

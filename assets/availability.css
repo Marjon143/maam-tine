@@ -1,0 +1,92 @@
+/* Table Container Styling */
+.table-wrapper {
+    margin-top: 30px;
+    overflow-x: auto;
+}
+
+/* Table Styling */
+.availability-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    font-size: 16px;
+    color: #333;
+}
+
+th {
+    background-color: #f4f7fc;
+    color: #555;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f5ff;
+}
+
+/* Status Styling */
+.status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.status.available {
+    background-color: #28a745;
+    color: white;
+}
+
+.status.not-available {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Button Styling */
+.view-info {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.view-info:hover {
+    background-color: #0056b3;
+}
+
+/* Dropdown Styling */
+.dropdown {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.dropdown:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Title and Section Styling */
+.section--title {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}

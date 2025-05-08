@@ -1,0 +1,116 @@
+/* General Styling for the Container */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;  /* Ensure the form is vertically centered */
+    padding: 20px;
+}
+
+/* Card Layout */
+.card {
+    width: 100%;
+    max-width: 800px;  /* Set a max-width to prevent the card from stretching too wide */
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #4CAF50;
+    padding: 20px;
+    color: white;
+    text-align: center;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Card Body (Form Styling) */
+.card-body {
+    padding: 30px;
+}
+
+.booking-form .form-group {
+    margin-bottom: 15px;
+}
+
+.booking-form label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.booking-form .input-field, .booking-form .dropdown, .booking-form textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.booking-form .dropdown {
+    background-color: #f8f8f8;
+}
+
+.booking-form textarea {
+    resize: vertical;
+}
+
+.booking-form .submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.booking-form .submit-btn:hover {
+    background-color: #45a049;
+}
+/* Styling for the dropdown and status labels */
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper .status {
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.status.available {
+    color: green;
+}
+
+.status.not-available {
+    color: red;
+}
+
+/* You can also add more styles to improve the dropdown */
+.dropdown {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    appearance: none; /* Removes the default dropdown arrow */
+}
+
+.dropdown:focus {
+    border-color: #4CAF50; /* Changes the border color on focus */
+}
+
+/* Optional: Style the select box */
+.dropdown option {
+    font-size: 14px;
+}
+
