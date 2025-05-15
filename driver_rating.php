@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 
 // Fetch available drivers with their average ratings
 $sql = "
-    SELECT d.driver_id, d.name, d.address, d.image_url, 
+    SELECT d.driver_id, driver_name, d.address, d.image_url, 
            IFNULL(AVG(r.rating), 0) AS avg_rating
     FROM drivers d
     LEFT JOIN ratings r ON d.driver_id = r.driver_id
@@ -105,7 +105,7 @@ $result = $conn->query($sql);
                 <div class='driver-card'>
                     <img src='" . htmlspecialchars($row['image_url']) . "' alt='Driver Image' class='driver-image'>
                     <div class='driver-info'>
-                        <h2 class='driver-name'>" . htmlspecialchars($row['name']) . "</h2>
+                        <h2 class='driver-name'>" . htmlspecialchars($row['driver_name']) . "</h2>
                         <p class='driver-address'>" . htmlspecialchars($row['address']) . "</p>
                     </div>
                     <div class='star-rating'>

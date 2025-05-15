@@ -110,6 +110,10 @@ $conn->close();
   <option value="">-- Select Dropoff Location --</option>
 </select>
 
+<label for="amount">Amount:</label>
+<input type="text" name="amount" id="amount" readonly>
+
+
 
         <button type="submit" class="book-btn">Book Now</button>
         <button type="button" class="book-btn" onclick="location.href='payment.php';">Go Back</button>
@@ -183,6 +187,42 @@ fetch('get_fare_locations.php?vehicle_type=' + encodeURIComponent(vehicleType))
     pickupSelect.innerHTML = '<option value="">-- Select Pickup Location --</option>';
     dropoffSelect.innerHTML = '<option value="">-- Select Dropoff Location --</option>';
   });
+
+  // Function to fetch and update amount
+function updateAmount() {
+  const vehicleType = document.getElementById('vehicle_type').value;
+  const pickup = document.getElementById('pickup_location').value;
+  const dropoff = document.getElementById('dropoff_location').value;
+  const amountInput = document.getElementById('amount');
+
+  if (vehicleType && pickup && dropoff) {
+    // Example fetch call to backend to get fare amount
+    fetch(`get_fare_amount.php?vehicle_type=${encodeURIComponent(vehicleType)}&pickup=${encodeURIComponent(pickup)}&dropoff=${encodeURIComponent(dropoff)}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.amount) {
+          amountInput.value = data.amount;
+        } else {
+          amountInput.value = "N/A";
+        }
+      })
+      .catch(() => {
+        amountInput.value = "Error";
+      });
+  } else {
+    amountInput.value = "";
+  }
+}
+
+// Call updateAmount when pickup or dropoff changes
+document.getElementById('pickup_location').addEventListener('change', updateAmount);
+document.getElementById('dropoff_location').addEventListener('change', updateAmount);
+document.getElementById('vehicle_type').addEventListener('change', () => {
+  // Clear amount on vehicle type change
+  document.getElementById('amount').value = "";
+  updateAmount();
+});
+
 
     });
   </script>

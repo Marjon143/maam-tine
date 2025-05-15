@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['driver_id'], $_POST['
 }
 
 // Fetch all available drivers
-$drivers = $conn->query("SELECT driver_id, name FROM drivers WHERE status = 'available'");
+$drivers = $conn->query("SELECT driver_id, driver_name FROM drivers WHERE status = 'available'");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -142,7 +142,7 @@ $drivers = $conn->query("SELECT driver_id, name FROM drivers WHERE status = 'ava
             <?php
             if ($drivers->num_rows > 0) {
                 while ($row = $drivers->fetch_assoc()) {
-                    echo "<option value='{$row['driver_id']}'>{$row['name']}</option>";
+                    echo "<option value='{$row['driver_id']}'>{$row['driver_name']}</option>";
                 }
             } else {
                 echo "<option disabled>No available drivers</option>";
