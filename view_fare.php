@@ -22,6 +22,11 @@ if (isset($_GET['fare_id'])) {
     $result = $stmt->get_result();
     $fare = $result->fetch_assoc();
     $stmt->close();
+
+    if (!$fare) {
+        echo "Fare record not found.";
+        exit;
+    }
 } else {
     echo "Fare ID is missing.";
     exit;
@@ -80,8 +85,9 @@ if (isset($_GET['fare_id'])) {
 
     <div class="details">
         <p><strong>Vehicle Type:</strong> <?= htmlspecialchars($fare['vehicle_type']) ?></p>
-        <p><strong>Route / Location:</strong> <?= htmlspecialchars($fare['route']) ?></p>
-        <p><strong>Fare Amount:</strong> ₱<?= number_format($fare['fare_amount'], 2) ?></p>
+        <p><strong>Pick-up Location:</strong> <?= htmlspecialchars($fare['pickup_location']) ?></p>
+        <p><strong>Drop-off Location:</strong> <?= htmlspecialchars($fare['dropoff_location']) ?></p>
+        <p><strong>Fare Amount:</strong> ₱<?= number_format((float)$fare['fare_amount'], 2) ?></p>
     </div>
 
     <a href="crud.php" class="back-btn">Back to Routes List</a>

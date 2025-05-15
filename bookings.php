@@ -31,9 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $driver_id = $_POST["driver_id"];
   $booking_date = $_POST["booking_date"];
   $booking_time = $_POST["booking_time"];
+  $pickup_location = $_POST["pickup_location"];
+  $dropoff_location = $_POST["dropoff_location"];
 
-  $stmt = $conn->prepare("INSERT INTO bookings (user_id, name, address, cellphone, vehicle_type, driver_id, booking_date, booking_time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pending')");
-  $stmt->bind_param("isssssss", $user_id, $name, $address, $cellphone, $vehicle_type, $driver_id, $booking_date, $booking_time);
+  $stmt = $conn->prepare("INSERT INTO bookings (user_id, name, address, cellphone, vehicle_type, driver_id, booking_date, booking_time, pickup_location, dropoff_location, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')");
+  $stmt->bind_param("isssssssss", $user_id, $name, $address, $cellphone, $vehicle_type, $driver_id, $booking_date, $booking_time, $pickup_location, $dropoff_location);
 
   if ($stmt->execute()) {
     $message = "Booking successful!";
@@ -52,102 +54,14 @@ $conn->close();
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="assets/booking1.css">
   <title>Book a Vehicle - ECARGA</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      padding-bottom: 70px;
-    }
-
-    header {
-      background-color: #222;
-      color: white;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-    }
-
-    .header-left h1 span {
-      color: #00bcd4;
-    }
-
-    .booking-form {
-      background: white;
-      max-width: 500px;
-      margin: 30px auto;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .booking-form h2 {
-      text-align: center;
-      color: #333;
-    }
-
-    form label {
-      display: block;
-      margin-top: 15px;
-      color: #333;
-    }
-
-    form input, form select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    .book-btn {
-      width: 100%;
-      margin-top: 20px;
-      padding: 12px;
-      background-color: #00bcd4;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .book-btn:hover {
-      background-color: #0097a7;
-    }
-
-    footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #222;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      color: white;
-      z-index: 100;
-    }
-
-    .nav a {
-      color: white;
-      text-decoration: none;
-      font-size: 14px;
-      text-align: center;
-    }
-
-    .nav span {
-      display: block;
-      font-size: 20px;
-    }
-  </style>
 </head>
 <body>
   <header>
     <div class="header-left">
       <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" class="flag" alt="App Logo" width="40" />
-      <h1 style="margin-left: 10px;">E<span>CARGA</span> <span class="beta">TM</span></h1>
+      <h1 style="margin-left: 50px; margin-top: -40px">e<span>CARGA</span> <span class="beta">TM</span></h1>
     </div>
   </header>
 
@@ -158,12 +72,11 @@ $conn->close();
         <p style="color: green;"><?php echo htmlspecialchars($message); ?></p>
       <?php endif; ?>
       <form method="POST" action="">
-      <label for="name">Full Name:</label>
-<input type="text" name="name" id="name" required value="<?php echo htmlspecialchars($name); ?>">
+        <label for="name">Full Name:</label>
+        <input type="text" name="name" id="name" required value="<?php echo htmlspecialchars($name); ?>">
 
-<label for="address">Address:</label>
-<input type="text" name="address" id="address" required value="<?php echo htmlspecialchars($address); ?>">
-
+        <label for="address">Address:</label>
+        <input type="text" name="address" id="address" required value="<?php echo htmlspecialchars($address); ?>">
 
         <label for="cellphone">Cellphone Number:</label>
         <input type="tel" name="cellphone" id="cellphone" pattern="[0-9]{11}" placeholder="e.g., 09123456789" required>
@@ -187,27 +100,36 @@ $conn->close();
         <label for="booking_time">Booking Time:</label>
         <input type="time" name="booking_time" id="booking_time" required>
 
+        <label for="pickup_location">Pickup Location:</label>
+<select name="pickup_location" id="pickup_location" required>
+  <option value="">-- Select Pickup Location --</option>
+</select>
+
+<label for="dropoff_location">Dropoff Location:</label>
+<select name="dropoff_location" id="dropoff_location" required>
+  <option value="">-- Select Dropoff Location --</option>
+</select>
+
+
         <button type="submit" class="book-btn">Book Now</button>
-        <button type="button" class="book-btn" onclick="location.href='customer_landing.php';">Go Back</button>
+        <button type="button" class="book-btn" onclick="location.href='payment.php';">Go Back</button>
       </form>
     </section>
   </main>
-
-  <footer>
-    <div class="nav"><a href="home.php"><span>🏠</span><p>Home</p></a></div>
-    <div class="nav"><a href="bookings.php"><span>📅</span><p>Bookings</p></a></div>
-    <div class="nav"><a href="history.php"><span>📜</span><p>History</p></a></div>
-    <div class="nav"><a href="profile.php"><span>👤</span><p>Profile</p></a></div>
-    <div class="nav"><a href="rate.php"><span>🌟</span><p>Rate</p></a></div>
-  </footer>
 
   <script>
     document.getElementById('vehicle_type').addEventListener('change', function () {
       const vehicleType = this.value;
       const driverSelect = document.getElementById('driver_id');
+      const pickupInput = document.getElementById('pickup_location');
+      const dropoffInput = document.getElementById('dropoff_location');
 
+      // Clear pickup and dropoff while loading
+      pickupInput.value = 'Loading...';
+      dropoffInput.value = 'Loading...';
+
+      // Fetch drivers for the selected vehicle type
       driverSelect.innerHTML = '<option value="">Loading...</option>';
-
       fetch('get_drivers.php?vehicle_type=' + encodeURIComponent(vehicleType))
         .then(response => response.json())
         .then(data => {
@@ -219,10 +141,49 @@ $conn->close();
             driverSelect.appendChild(option);
           });
         })
-        .catch(error => {
-          console.error('Error fetching drivers:', error);
+        .catch(() => {
           driverSelect.innerHTML = '<option value="">No drivers found</option>';
         });
+
+      // Fetch pickup and dropoff locations for the selected vehicle type
+      // Fetch pickup and dropoff locations for the selected vehicle type
+fetch('get_fare_locations.php?vehicle_type=' + encodeURIComponent(vehicleType))
+  .then(response => response.json())
+  .then(data => {
+    const pickupSelect = document.getElementById('pickup_location');
+    const dropoffSelect = document.getElementById('dropoff_location');
+
+    // Clear previous options except the placeholder
+    pickupSelect.innerHTML = '<option value="">-- Select Pickup Location --</option>';
+    dropoffSelect.innerHTML = '<option value="">-- Select Dropoff Location --</option>';
+
+    if (!data.error) {
+      // Populate pickup locations
+      data.pickup_locations.forEach(loc => {
+        const option = document.createElement('option');
+        option.value = loc;
+        option.textContent = loc;
+        pickupSelect.appendChild(option);
+      });
+
+      // Populate dropoff locations
+      data.dropoff_locations.forEach(loc => {
+        const option = document.createElement('option');
+        option.value = loc;
+        option.textContent = loc;
+        dropoffSelect.appendChild(option);
+      });
+    } else {
+      console.warn(data.error);
+    }
+  })
+  .catch(() => {
+    const pickupSelect = document.getElementById('pickup_location');
+    const dropoffSelect = document.getElementById('dropoff_location');
+    pickupSelect.innerHTML = '<option value="">-- Select Pickup Location --</option>';
+    dropoffSelect.innerHTML = '<option value="">-- Select Dropoff Location --</option>';
+  });
+
     });
   </script>
 </body>

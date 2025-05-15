@@ -5,7 +5,6 @@ $username = "root";
 $password = "";
 $dbname = "ecarga";
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
@@ -22,6 +21,11 @@ if (isset($_GET['fare_id'])) {
     $result = $stmt->get_result();
     $fare = $result->fetch_assoc();
     $stmt->close();
+    
+    if (!$fare) {
+        echo "Fare not found.";
+        exit;
+    }
 } else {
     echo "Fare ID is missing.";
     exit;
@@ -29,19 +33,22 @@ if (isset($_GET['fare_id'])) {
 
 // Handle form submission for editing
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fare_action']) && $_POST['fare_action'] === 'edit') {
+    $fare_id = intval($_POST['fare_id']);
     $vehicle_type = $_POST['fareVehicleType'];
-    $route = $_POST['fareRoute'];
-    $fare_amount = $_POST['fareAmount'];
+    $pickup_location = $_POST['farepickuplocation'];
+    $dropoff_location = $_POST['faredropofflocation'];
+    $fare_amount = floatval($_POST['fareAmount']);
 
-    $stmt = $conn->prepare("UPDATE fares SET vehicle_type = ?, route = ?, fare_amount = ? WHERE fare_id = ?");
-    $stmt->bind_param("ssdi", $vehicle_type, $route, $fare_amount, $fare_id);
+    $stmt = $conn->prepare("UPDATE fares SET vehicle_type = ?, pickup_location = ?, dropoff_location = ?, fare_amount = ? WHERE fare_id = ?");
+    $stmt->bind_param("sssdi", $vehicle_type, $pickup_location, $dropoff_location, $fare_amount, $fare_id);
 
     if ($stmt->execute()) {
         header("Location: crud.php");
         exit;
     } else {
-        echo "Error: " . $stmt->error;
+        echo "Error updating fare: " . $stmt->error;
     }
+
     $stmt->close();
 }
 ?>
@@ -93,6 +100,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fare_action']) && $_P
         .form-container button:hover {
             background-color: #218838;
         }
+        .back-btn {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-btn:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -100,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fare_action']) && $_P
 <div class="container">
     <h2>Edit Fare</h2>
 
-    <form action="edit_fare.php?fare_id=<?= $fare['fare_id'] ?>" method="POST" class="form-container">
+    <form action="edit_fare.php?fare_id=<?= htmlspecialchars($fare['fare_id']) ?>" method="POST" class="form-container">
         <select name="fareVehicleType" required>
             <option value="" disabled>Select Vehicle Type</option>
             <option value="Jeep" <?= $fare['vehicle_type'] === 'Jeep' ? 'selected' : '' ?>>Jeep</option>
@@ -108,10 +124,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fare_action']) && $_P
             <option value="Motorcycle" <?= $fare['vehicle_type'] === 'Motorcycle' ? 'selected' : '' ?>>Motorcycle</option>
         </select>
 
-        <input type="text" name="fareRoute" placeholder="Route / Location" value="<?= htmlspecialchars($fare['route']) ?>" required>
+        <input type="text" name="farepickuplocation" placeholder="Pick-up Location" value="<?= htmlspecialchars($fare['pickup_location']) ?>" required>
+        <input type="text" name="faredropofflocation" placeholder="Drop-off Location" value="<?= htmlspecialchars($fare['dropoff_location']) ?>" required>
 
         <input type="number" step="0.01" name="fareAmount" placeholder="Fare Amount" value="<?= htmlspecialchars($fare['fare_amount']) ?>" required>
 
+        <input type="hidden" name="fare_id" value="<?= htmlspecialchars($fare['fare_id']) ?>">
         <input type="hidden" name="fare_action" value="edit">
 
         <button type="submit">Update Fare</button>

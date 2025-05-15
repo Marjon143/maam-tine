@@ -32,35 +32,17 @@
       
         <button class="btn sign__up" onclick="location.href='login.php'">Register</button>
 
-        <button class="btn sign__in">Login</button>
+        <button class="btn sign__in" onclick="location.href='login.php'">Login</button>
       </div>
     </nav>
     <header class="header__container">
-      <div class="header__image">
-        <div class="header__image__card header__image__card-1">
-          <span><i class="ri-key-line"></i></span>
-          Hotel Booking
-        </div>
-        <div class="header__image__card header__image__card-2">
-          <span><i class="ri-passport-line"></i></span>
-          Flight Tickets
-        </div>
-        <div class="header__image__card header__image__card-3">
-          <span><i class="ri-map-2-line"></i></span>
-          Local Events
-        </div>
-        <div class="header__image__card header__image__card-4">
-          <span><i class="ri-guide-line"></i></span>
-          Tour Guide
-        </div>
-        <img src="assets/header.png" alt="header" />
+     
+        <img src="https://content.presspage.com/uploads/685/c1920_femaleusingmobiledevice-774181.jpg?45004" alt="header" />
       </div>
       <div class="header__content">
-        <h1>LET'S GO!<br />THE <span>ADVENTURE</span> IS WAITING FOR YOU</h1>
+                <h1>TAP<br />BOOK <span>Go! </span>  ITS That Easy</h1>
         <p>
-          Embark on Your Journey Today and Discover Uncharted Wonders Around the
-          World - Your Adventure Awaits with Exciting Experiences, Unforgettable
-          Memories, and Endless Opportunities
+          Booking made Easy, Riding made Safe
         </p>
         <form action="/">
           <div class="input__row">
@@ -81,9 +63,7 @@
           </div>
           <button type="submit">Search</button>
         </form>
-        <div class="bar">
-          Copyright © 2024 Web Design Mastery. All rights reserved.
-        </div>
+       
       </div>
     </header>
     <script src="https://unpkg.com/scrollreveal"></script>

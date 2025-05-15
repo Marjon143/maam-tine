@@ -58,13 +58,19 @@ $sql = "SELECT * FROM drivers";
 $result = $conn->query($sql);
 
 // Handle add fare
+// Handle add fare
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fare_action']) && $_POST['fare_action'] === 'add') {
     $vehicle_type = $_POST['fareVehicleType'];
-    $route = $_POST['fareRoute'];
+    $pickup_location = $_POST['farepickuplocation'];
+    $dropoff_location = $_POST['faredropofflocation'];
     $fare_amount = $_POST['fareAmount'];
+    
+    
 
-    $stmt = $conn->prepare("INSERT INTO fares (vehicle_type, route, fare_amount) VALUES (?, ?, ?)");
-    $stmt->bind_param("ssd", $vehicle_type, $route, $fare_amount);
+
+
+    $stmt = $conn->prepare("INSERT INTO fares (vehicle_type, pickup_location, dropoff_location, fare_amount) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("sssd", $vehicle_type, $pickup_location, $dropoff_location, $fare_amount);
 
     if ($stmt->execute()) {
         header("Location: crud.php");
@@ -74,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fare_action']) && $_P
     }
     $stmt->close();
 }
+
 
 // Handle delete fare
 if (isset($_GET['action']) && $_GET['action'] === 'delete_fare' && isset($_GET['fare_id'])) {
@@ -305,25 +312,28 @@ $fare_result = $conn->query("SELECT * FROM fares");
 
     <h2>Route List</h2>
     <div class="form-container">
-        <form action="crud.php" method="POST">
-            <select name="fareVehicleType" required>
-                <option value="" disabled selected>Select Vehicle Type</option>
-                <option value="Jeep">Jeep</option>
-                <option value="Bao-Bao">Bao-Bao</option>
-                <option value="Motorcycle">Motorcycle</option>
-            </select>
-            <input type="text" name="fareRoute" placeholder="Route / Location" required>
-            <input type="number" step="0.01" name="fareAmount" placeholder="Fare Amount" required>
-            <input type="hidden" name="fare_action" value="add">
-            <button type="submit">Add Fare</button>
-        </form>
+       <form action="crud.php" method="POST">
+    <select name="fareVehicleType" required>
+        <option value="" disabled selected>Select Vehicle Type</option>
+        <option value="Jeep">Jeep</option>
+        <option value="Bao-Bao">Bao-Bao</option>
+        <option value="Motorcycle">Motorcycle</option>
+    </select>
+    <input type="text" name="farepickuplocation" placeholder="Pick-up Location" required>
+    <input type="text" name="faredropofflocation" placeholder="Drop-off Location" required>
+    <input type="number" step="0.01" name="fareAmount" placeholder="Fare Amount" required>
+    <input type="hidden" name="fare_action" value="add">
+    <button type="submit">Add Fare</button>
+</form>
+
     </div>
 
     <table>
         <thead>
         <tr>
             <th>Vehicle Type</th>
-            <th>Route / Location</th>
+            <th>Pick-up Location</th>
+            <th>Drop-off Location</th>
             <th>Fare</th>
             <th>Actions</th>
         </tr>
@@ -333,7 +343,8 @@ $fare_result = $conn->query("SELECT * FROM fares");
             <?php while ($fare = $fare_result->fetch_assoc()): ?>
                 <tr>
                     <td><?= htmlspecialchars($fare['vehicle_type']) ?></td>
-                    <td><?= htmlspecialchars($fare['route']) ?></td>
+                    <td><?= htmlspecialchars($fare['pickup_location']) ?></td>
+                     <td><?= htmlspecialchars($fare['dropoff_location']) ?></td>
                     <td>₱<?= number_format($fare['fare_amount'], 2) ?></td>
                     <td class="action-buttons">
                         <a href="view_fare.php?fare_id=<?= $fare['fare_id'] ?>" class="view-btn">View</a>

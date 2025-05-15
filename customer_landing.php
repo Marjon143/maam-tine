@@ -227,6 +227,9 @@ $stmt->close();
   .fare-table th:nth-child(3) {
     background-color: #FF9800; /* Orange */
   }
+   .fare-table th:nth-child(4) {
+    background-color:rgb(10, 161, 10); /* Orange */
+  }
 
   /* Different column background colors */
   .fare-table td:nth-child(1) {
@@ -234,7 +237,7 @@ $stmt->close();
   }
 
   .fare-table td:nth-child(2) {
-    background-color: #e3f2fd; /* Light blue */
+    background-color:rgb(231, 235, 238); /* Light blue */
   }
 
   .fare-table td:nth-child(3) {
@@ -259,7 +262,7 @@ $stmt->close();
         die("Connection failed: " . $conn->connect_error);
       }
 
-      $sql = "SELECT vehicle_type, route, fare_amount FROM fares";
+      $sql = "SELECT vehicle_type, pickup_location, dropoff_location, fare_amount FROM fares";
       $result = $conn->query($sql);
 
       if ($result->num_rows > 0): ?>
@@ -267,7 +270,8 @@ $stmt->close();
           <thead>
             <tr>
               <th>Vehicle Type</th>
-              <th>Route</th>
+              <th>Pickup Location</th>
+              <th>Dropoff Location</th>
               <th>Fare (₱)</th>
             </tr>
           </thead>
@@ -275,7 +279,8 @@ $stmt->close();
             <?php while ($row = $result->fetch_assoc()): ?>
               <tr>
                 <td><?php echo htmlspecialchars($row['vehicle_type']); ?></td>
-                <td><?php echo htmlspecialchars($row['route']); ?></td>
+                <td><?php echo htmlspecialchars($row['pickup_location']); ?></td>
+                <td><?php echo htmlspecialchars($row['dropoff_location']); ?></td>
                 <td><?php echo number_format($row['fare_amount'], 2); ?></td>
               </tr>
             <?php endwhile; ?>
@@ -289,6 +294,7 @@ $stmt->close();
     ?>
   </div>
 </section>
+
 
 
 

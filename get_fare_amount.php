@@ -1,5 +1,4 @@
 <?php
-// get_drivers.php
 header('Content-Type: application/json');
 
 $conn = new mysqli("localhost", "root", "", "ecarga");
@@ -15,9 +14,7 @@ if (!isset($_GET['vehicle_type'])) {
 
 $vehicle_type = $_GET['vehicle_type'];
 
-// Fetch available drivers for this vehicle type
-$stmt = $conn->prepare("SELECT driver_id, driver_name AS name FROM drivers WHERE vehicle_type = ? AND status = 'available'");
-
+$stmt = $conn->prepare("SELECT driver_id, driver_name FROM drivers WHERE vehicle_type = ? AND status = 'available'");
 $stmt->bind_param("s", $vehicle_type);
 $stmt->execute();
 $result = $stmt->get_result();
