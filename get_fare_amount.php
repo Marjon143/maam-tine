@@ -2,29 +2,35 @@
 header('Content-Type: application/json');
 
 $conn = new mysqli("localhost", "root", "", "ecarga");
+
 if ($conn->connect_error) {
-    echo json_encode(['error' => 'Database connection failed']);
-    exit;
+  echo json_encode(["error" => "Connection failed: " . $conn->connect_error]);
+  exit;
 }
 
-if (!isset($_GET['vehicle_type'])) {
-    echo json_encode(['error' => 'Vehicle type not specified']);
-    exit;
+// Get parameters from GET request
+$vehicle_type = $_GET['vehicle_type'] ?? '';
+$pickup = $_GET['pickup'] ?? '';
+$dropoff = $_GET['dropoff'] ?? '';
+
+// Validate input
+if (empty($vehicle_type) || empty($pickup) || empty($dropoff)) {
+  echo json_encode(["error" => "Missing parameters"]);
+  exit;
 }
 
-$vehicle_type = $_GET['vehicle_type'];
-
-$stmt = $conn->prepare("SELECT driver_id, driver_name FROM drivers WHERE vehicle_type = ? AND status = 'available'");
-$stmt->bind_param("s", $vehicle_type);
+// Prepare and execute query
+$stmt = $conn->prepare("SELECT fare_amount FROM fares WHERE vehicle_type = ? AND pickup_location = ? AND dropoff_location = ?");
+$stmt->bind_param("sss", $vehicle_type, $pickup, $dropoff);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$drivers = [];
-while ($row = $result->fetch_assoc()) {
-    $drivers[] = $row;
+if ($row = $result->fetch_assoc()) {
+  echo json_encode(["amount" => $row['fare_amount']]);
+} else {
+  echo json_encode(["error" => "Fare not found"]);
 }
 
 $stmt->close();
 $conn->close();
-
-echo json_encode($drivers);
+?>
