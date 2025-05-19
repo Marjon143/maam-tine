@@ -21,15 +21,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($transaction_id) || empty($comments)) {
         echo "<script>alert('Please fill all required fields.');</script>";
     } else {
-        // Verify transaction belongs to this driver & fetch user_id and customer_name
+        // Correct way to fetch user_id and customer_name
         $stmt = $conn->prepare("SELECT user_id, name FROM transactions WHERE transaction_id = ? AND driver_id = ?");
         $stmt->bind_param("ii", $transaction_id, $driver_id);
         $stmt->execute();
-        $stmt->bind_result($user_id, $customer_name);
-        if ($stmt->fetch()) {
+        $result = $stmt->get_result();
+        if ($row = $result->fetch_assoc()) {
+            $user_id = $row['user_id'];
+            $customer_name = $row['name'];
             $stmt->close();
 
-            // Insert feedback using user_id and customer_name
+            // Insert feedback
             $stmt = $conn->prepare("INSERT INTO driver_feedback (user_id, driver_id, driver_name, name, comments) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("iisss", $user_id, $driver_id, $driver_name, $customer_name, $comments);
             if ($stmt->execute()) {
@@ -43,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
 
 // Fetch transactions for the logged-in driver
 $sql = "SELECT transaction_id, booking_id, user_id, name, pickup_location, dropoff_location, action, transaction_status, action_time 
