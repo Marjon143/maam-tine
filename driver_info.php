@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch drivers from the database (using the 'address' column instead of 'description')
-$sql = "SELECT driver_id, name, image_url, address FROM drivers";
+$sql = "SELECT driver_id, driver_name, image_url, address FROM drivers";
 $result = $conn->query($sql);
 
 // Initialize the carousel items counter
@@ -71,9 +71,9 @@ $carouselItemIndex = 0;
             while ($row = $result->fetch_assoc()) {
                 $activeClass = $carouselItemIndex === 0 ? 'active' : '';
                 echo "<div class='carousel-item $activeClass'>
-                        <img src='" . $row['image_url'] . "' class='d-block w-100' alt='" . $row['name'] . "'>
+                        <img src='" . $row['image_url'] . "' class='d-block w-100' alt='" . $row['driver_name'] . "'>
                         <div class='carousel-caption d-none d-md-block'>
-                            <h5>" . $row['name'] . "</h5>
+                            <h5>" . $row['driver_name'] . "</h5>
                             <p>" . $row['address'] . "</p> <!-- Updated to use 'address' instead of 'description' -->
                         </div>
                       </div>";

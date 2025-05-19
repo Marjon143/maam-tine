@@ -9,7 +9,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/index.css" />
-    <title>Web Design Mastery | SoulTravel</title>
+    <title>ECARGA</title>
   </head>
   <body>
     <nav>
@@ -22,14 +22,14 @@
         </div>
       </div>
       <ul class="nav__links" id="nav-links">
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Services</a></li>
-        <li><a href="#">Contact Us</a></li>
+        <li><a href="about_us.php">About Us</a></li>
+        <li><a href="services.php">Services</a></li>
+        
 
         
       </ul>
       <div class="nav__btns">
-      
+      x
         <button class="btn sign__up" onclick="location.href='login.php'">Register</button>
 
         <button class="btn sign__in" onclick="location.href='login.php'">Login</button>
@@ -44,25 +44,7 @@
         <p>
           Booking made Easy, Riding made Safe
         </p>
-        <form action="/">
-          <div class="input__row">
-            <div class="input__group">
-              <h5>Destination</h5>
-              <div>
-                <span><i class="ri-map-pin-line"></i></span>
-                <input type="text" placeholder="Paris, France" />
-              </div>
-            </div>
-            <div class="input__group">
-              <h5>Date</h5>
-              <div>
-                <span><i class="ri-calendar-2-line"></i></span>
-                <input type="text" placeholder="17 July 2024" />
-              </div>
-            </div>
-          </div>
-          <button type="submit">Search</button>
-        </form>
+        
        
       </div>
     </header>

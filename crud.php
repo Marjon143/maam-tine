@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO drivers (name, address, vehicle_type, plate_number, years_experience, image_url, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO drivers (driver_name, address, vehicle_type, plate_number, years_experience, image_url, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssssss", $name, $address, $vehicle_type, $plate_number, $years_experience, $image_url, $email, $hashed_password);
 
     if ($stmt->execute()) {
@@ -291,7 +291,7 @@ $fare_result = $conn->query("SELECT * FROM fares");
             <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
                     <td><img src="<?= htmlspecialchars($row['image_url']) ?>" class="image-preview" alt="Driver Image"></td>
-                    <td><?= htmlspecialchars($row['name']) ?></td>
+                    <td><?= htmlspecialchars($row['driver_name']) ?></td>
                     <td><?= htmlspecialchars($row['address']) ?></td>
                     <td><?= htmlspecialchars($row['vehicle_type']) ?></td>
                     <td><?= htmlspecialchars($row['plate_number']) ?></td>

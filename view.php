@@ -48,7 +48,7 @@ if (isset($_GET['id'])) {
     <h2>Driver Details</h2>
     <?php if ($driver): ?>
     <div class="driver-info">
-        <p><strong>Name:</strong> <?php echo htmlspecialchars($driver['name']); ?></p>
+        <p><strong>Name:</strong> <?php echo htmlspecialchars($driver['driver_name']); ?></p>
         <p><strong>Address:</strong> <?php echo htmlspecialchars($driver['address']); ?></p>
         <p><strong>Vehicle Type:</strong> <?php echo htmlspecialchars($driver['vehicle_type']); ?></p>
         <p><strong>Plate Number:</strong> <?php echo htmlspecialchars($driver['plate_number']); ?></p>

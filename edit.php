@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <form action="edit.php?id=<?php echo htmlspecialchars($driver['driver_id']); ?>" method="POST">
         <div class="form-group">
             <label for="driverName">Driver Name</label>
-            <input type="text" name="driverName" value="<?php echo htmlspecialchars($driver['name']); ?>" required>
+            <input type="text" name="driverName" value="<?php echo htmlspecialchars($driver['driver_name']); ?>" required>
         </div>
 
         <div class="form-group">

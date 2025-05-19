@@ -46,9 +46,10 @@ $stmt->close();
       </section>
 
       <section class="services">
-        <div class="service"><img src="image/Graphicloads-100-Flat-2-Bus.64.png"><span>Vehicle</span></div>
-        <a href="driver_info.php"><div class="service"><img src="image/Icons8-Windows-8-Transport-Driver.64.png" alt="Drivers"><span>Drivers</span></div></a>
-        <a href="driver_rating.php"><div class="service"><img src="image/Icons8-Windows-8-Very-Basic-Rating.64.png" alt="Ratings Icon"><span>Ratings</span></div></a>
+        <div class="service"><a href="customer_news.php"><img src="image/Pelfusion-Long-Shadow-Ios7-News.64.png" alt="News"></a><span>News</span></div>
+        <div class="service"><a href="driver_info.php"><img src="image/Icons8-Windows-8-Transport-Driver.64.png" alt="Drivers"></a><span>Drivers</span></div>
+        <div class="service"><a href="driver_rating.php"><img src="image/Icons8-Windows-8-Very-Basic-Rating.64.png" alt="Ratings Icon"></a><span>Ratings</span></div>
+
 
       </section>
 
@@ -254,7 +255,7 @@ $stmt->close();
 </style>
 
 <section class="fare-route">
-  <h3>Fare & Route Information</h3>
+  <h3>Fare Price</h3>
   <div class="fare-table-container">
     <?php
       $conn = new mysqli("localhost", "root", "", "ecarga");
@@ -303,13 +304,54 @@ $stmt->close();
     </main>
 
     <footer>
-      <div class="nav"><a href="home.php"><span>🏠</span><p>Home</p></a></div>
-      <div class="nav"><a href="bookings.php"><span>📅</span><p>Bookings</p></a></div>
-      <div class="nav"><a href="history.php"><span>📜</span><p>History</p></a></div>
-      <div class="nav"><a href="profile.php"><span>👤</span><p>Profile</p></a></div>
-      <a href="user_rating_driver.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>👤</span><p style="margin: 0;">Rate</p></a>
+      
+<a href="customer_feedback.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>📅</span><p style="margin: 0;">Feedback</p></a>
+<a href="payment.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>📅</span><p style="margin: 0;">Make Payment </p></a>
+<a href="history.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>📜</span><p style="margin: 0;">History</p></a>
+<a href="profile.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>👤</span><p style="margin: 0;">Profile</p></a>
+<a href="user_rating_driver.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>👤</span><p style="margin: 0;">Rate</p></a>
+<a href="index.php" onclick="showLogoutModal()" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>🚪</span><p style="margin: 0;">Logout</p></a>
+
+
 
     </footer>
+
+  
+  <!-- Logout Modal -->
+  <div id="logoutModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+    <div style="background: white; width: 90%; max-width: 400px; margin: 10% auto; padding: 20px; border-radius: 8px; text-align: center;">
+      <h3>Confirm Logout</h3>
+      <p>Are you sure you want to logout?</p>
+      <button onclick="logout()" style="padding: 10px 20px; margin-right: 10px; background-color: #d9534f; color: white; border: none; border-radius: 4px;">Yes</button>
+      <button onclick="hideLogoutModal()" style="padding: 10px 20px; background-color: #5bc0de; color: white; border: none; border-radius: 4px;">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    function showLogoutModal() {
+      document.getElementById('logoutModal').style.display = 'block';
+      return false;
+    }
+
+    function hideLogoutModal() {
+      document.getElementById('logoutModal').style.display = 'none';
+    }
+
+    function logout() {
+      window.location.href = 'logout.php'; // Change to index.php if needed
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('logoutModal');
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    };
+  </script>
+
+
+
+  
 
     <script src="script.js"></script>
   </body>

@@ -33,9 +33,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $booking_time = $_POST["booking_time"];
   $pickup_location = $_POST["pickup_location"];
   $dropoff_location = $_POST["dropoff_location"];
+  $fare_amount = $_POST["fare_amount"];
 
-  $stmt = $conn->prepare("INSERT INTO bookings (user_id, name, address, cellphone, vehicle_type, driver_id, booking_date, booking_time, pickup_location, dropoff_location, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')");
-  $stmt->bind_param("isssssssss", $user_id, $name, $address, $cellphone, $vehicle_type, $driver_id, $booking_date, $booking_time, $pickup_location, $dropoff_location);
+  $stmt = $conn->prepare("INSERT INTO bookings (user_id, name, address, cellphone, vehicle_type, driver_id, booking_date, booking_time, pickup_location, dropoff_location, fare_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')");
+
+ $stmt->bind_param("isssssssssd", $user_id, $name, $address, $cellphone, $vehicle_type, $driver_id, $booking_date, $booking_time, $pickup_location, $dropoff_location, $fare_amount);
+
+
 
   if ($stmt->execute()) {
     $message = "Booking successful!";
@@ -111,12 +115,14 @@ $conn->close();
 </select>
 
 <label for="amount">Amount:</label>
-<input type="text" name="amount" id="amount" readonly>
+<input type="text" name="fare_amount" id="fare_amount" readonly>
+
 
 
 
         <button type="submit" class="book-btn">Book Now</button>
-        <button type="button" class="book-btn" onclick="location.href='payment.php';">Go Back</button>
+        <button type="button" class="book-btn" onclick="location.href='payment.php';">Proceed to Payment</button>
+        <button type="button" class="book-btn" onclick="location.href='customer_landing.php';">Go Back</button>
       </form>
     </section>
   </main>
@@ -193,7 +199,7 @@ function updateAmount() {
   const vehicleType = document.getElementById('vehicle_type').value;
   const pickup = document.getElementById('pickup_location').value;
   const dropoff = document.getElementById('dropoff_location').value;
-  const amountInput = document.getElementById('amount');
+  const amountInput = document.getElementById('fare_amount');
 
   if (vehicleType && pickup && dropoff) {
     // Example fetch call to backend to get fare amount
@@ -219,7 +225,7 @@ document.getElementById('pickup_location').addEventListener('change', updateAmou
 document.getElementById('dropoff_location').addEventListener('change', updateAmount);
 document.getElementById('vehicle_type').addEventListener('change', () => {
   // Clear amount on vehicle type change
-  document.getElementById('amount').value = "";
+  document.getElementById('fare_amount').value = "";
   updateAmount();
 });
 

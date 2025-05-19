@@ -1,0 +1,139 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  line-height: 1.6;
+  background-color: #fff;
+}
+
+/* Go Back Button */
+.go-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #ffffffcc;
+  color: #333;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
+  z-index: 999;
+}
+
+.go-back-btn:hover {
+  background-color: #f0f0f0;
+}
+
+/* Header Section */
+.about-section {
+  position: relative;
+  background-image: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0');
+  background-size: cover;
+  background-position: center;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.about-section .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.about-section .content {
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.about-section h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.about-section p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Info Section */
+.info-section {
+  padding: 3rem 1.5rem;
+  background: #f9f9f9;
+}
+
+.info-section .container {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.info-section h2 {
+  font-size: 2rem;
+  color: #222;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.info-section p,
+.info-section ul {
+  max-width: 800px;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  text-align: center;
+}
+
+ul {
+  list-style-type: disc;
+  margin-left: 2rem;
+}
+
+/* Team Section */
+.team {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.member {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  flex: 1 1 250px;
+}
+
+.member img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.member h3 {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #111;
+}
+
+.member p {
+  color: #777;
+  font-size: 0.95rem;
+}
