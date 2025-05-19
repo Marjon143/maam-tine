@@ -5,7 +5,12 @@ if ($conn->connect_error) {
 }
 
 // Simulated logged-in user ID (replace this with session value in production)
-$user_id = 1; 
+session_start();
+$user_id = $_SESSION['user_id'] ?? null;
+if (!$user_id) {
+  die("User not logged in.");
+}
+ 
 $message = "";
 
 // Fetch user details

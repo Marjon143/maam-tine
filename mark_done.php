@@ -19,6 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['transaction_id'])) {
   $stmt->bind_param("ii", $transaction_id, $driver_id);
 
   if ($stmt->execute()) {
+    // ✅ Set driver status back to 'available'
+    $updateDriver = $conn->prepare("UPDATE drivers SET status = 'available' WHERE driver_id = ?");
+    $updateDriver->bind_param("i", $driver_id);
+    $updateDriver->execute();
+    $updateDriver->close();
+
     header("Location: transaction.php?updated=1");
     exit();
   } else {

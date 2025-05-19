@@ -68,38 +68,41 @@ if ($result && $result->num_rows > 0) {
   </div>
 
   <!-- Booking Requests Section -->
-  <div class="section">
-    <h2>Booking Requests</h2>
-    <?php
-    $booking_sql = "SELECT booking_id, name, pickup_location, dropoff_location FROM bookings WHERE status = 'Pending'";
-    $booking_result = $conn->query($booking_sql);
+<div class="section">
+  <h2>Booking Requests</h2>
+  <?php
+  $booking_sql = "SELECT booking_id, name, pickup_location, dropoff_location 
+                  FROM bookings 
+                  WHERE status = 'Pending' AND driver_id = '$driver_id'";
+  $booking_result = $conn->query($booking_sql);
 
-    if ($booking_result && $booking_result->num_rows > 0) {
-      while ($row = $booking_result->fetch_assoc()) {
-        echo "<div class='booking-item'>";
-        echo "<strong>Customer:</strong> " . htmlspecialchars($row['name']) . "<br/>";
-        echo "<strong>From:</strong> " . htmlspecialchars($row['pickup_location']) . "<br/>";
-        echo "<strong>To:</strong> " . htmlspecialchars($row['dropoff_location']) . "<br/>";
+  if ($booking_result && $booking_result->num_rows > 0) {
+    while ($row = $booking_result->fetch_assoc()) {
+      echo "<div class='booking-item'>";
+      echo "<strong>Customer:</strong> " . htmlspecialchars($row['name']) . "<br/>";
+      echo "<strong>From:</strong> " . htmlspecialchars($row['pickup_location']) . "<br/>";
+      echo "<strong>To:</strong> " . htmlspecialchars($row['dropoff_location']) . "<br/>";
 
-        // Accept Form
-        echo "<form method='POST' action='accept_booking.php' style='display:inline-block; margin-right: 10px;'>";
-        echo "<input type='hidden' name='booking_id' value='" . $row['booking_id'] . "'/>";
-        echo "<button class='accept-btn' type='submit'>Accept Request</button>";
-        echo "</form>";
+      // Accept Form
+      echo "<form method='POST' action='accept_booking.php' style='display:inline-block; margin-right: 10px;'>";
+      echo "<input type='hidden' name='booking_id' value='" . $row['booking_id'] . "'/>";
+      echo "<button class='accept-btn' type='submit'>Accept Request</button>";
+      echo "</form>";
 
-        // Deny Form
-        echo "<form method='POST' action='deny_booking.php' style='display:inline-block;'>";
-        echo "<input type='hidden' name='booking_id' value='" . $row['booking_id'] . "'/>";
-        echo "<button class='deny-btn' type='submit' onclick='return confirm(\"Are you sure you want to deny this booking?\");'>Deny Request</button>";
-        echo "</form>";
+      // Deny Form
+      echo "<form method='POST' action='deny_booking.php' style='display:inline-block;'>";
+      echo "<input type='hidden' name='booking_id' value='" . $row['booking_id'] . "'/>";
+      echo "<button class='deny-btn' type='submit' onclick='return confirm(\"Are you sure you want to deny this booking?\");'>Deny Request</button>";
+      echo "</form>";
 
-        echo "</div>";
-      }
-    } else {
-      echo "<p>No pending bookings.</p>";
+      echo "</div>";
     }
-    ?>
-  </div>
+  } else {
+    echo "<p>No pending bookings assigned to you.</p>";
+  }
+  ?>
+</div>
+
 
   <!-- Gasoline Prices -->
   <div class="section">

@@ -17,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'])) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Get booking info (including user_id)
-    $stmt = $conn->prepare("SELECT user_id, name, pickup_location, dropoff_location FROM bookings WHERE booking_id = ?");
-    $stmt->bind_param("i", $booking_id);
+    // Verify that the booking belongs to this driver
+    $stmt = $conn->prepare("SELECT user_id, name, pickup_location, dropoff_location FROM bookings WHERE booking_id = ? AND driver_id = ?");
+    $stmt->bind_param("ii", $booking_id, $driver_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -36,17 +36,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['booking_id'])) {
         $insert->execute();
         $insert->close();
 
-        // ✅ Update booking status to 'Confirmed'
+        // Update booking status to 'Confirmed'
         $update = $conn->prepare("UPDATE bookings SET status = 'Confirmed' WHERE booking_id = ?");
         $update->bind_param("i", $booking_id);
         $update->execute();
         $update->close();
 
-        // Redirect with success flag
+        // Set driver's status to 'busy'
+        $driverStatusUpdate = $conn->prepare("UPDATE drivers SET status = 'busy' WHERE driver_id = ?");
+        $driverStatusUpdate->bind_param("i", $driver_id);
+        $driverStatusUpdate->execute();
+        $driverStatusUpdate->close();
+
         header("Location: driver_side_landing.php?success=1");
         exit();
     } else {
-        echo "Booking not found.";
+        echo "❌ Unauthorized: This booking is not assigned to you.";
     }
 
     $stmt->close();
