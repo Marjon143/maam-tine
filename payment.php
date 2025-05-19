@@ -1,4 +1,14 @@
+
 <?php
+session_start(); // Start session to access user_id
+
+// Simulated login: Replace this with your actual login logic
+// Assuming you store logged-in user ID in $_SESSION['user_id']
+if (!isset($_SESSION['user_id'])) {
+    die("User not logged in.");
+}
+$current_user_id = $_SESSION['user_id'];
+
 // DB connection
 $conn = new mysqli("localhost", "root", "", "ecarga");
 if ($conn->connect_error) {
@@ -13,18 +23,19 @@ $driver_name = '';
 $fare_amount = '';
 
 // Fetch bookings for dropdown
-$bookings_result = $conn->query("SELECT booking_id FROM bookings ORDER BY booking_id ASC");
+$bookings_result = $conn->query("SELECT booking_id FROM bookings WHERE user_id = $current_user_id ORDER BY booking_id ASC");
+
 
 // Fetch booking info if booking_id is selected
 if ($booking_id > 0) {
-    $sql = "SELECT 
-                b.booking_id, b.user_id, u.name AS user_name, 
-                b.driver_id, d.driver_name AS driver_name, b.fare_amount AS fare_amount
-            FROM bookings b
-            LEFT JOIN users u ON b.user_id = u.user_id
-            LEFT JOIN drivers d ON b.driver_id = d.driver_id
-            WHERE b.booking_id = $booking_id
-            LIMIT 1";
+   $sql = "SELECT 
+            b.booking_id, b.user_id, u.name AS user_name, 
+            b.driver_id, d.driver_name AS driver_name, b.fare_amount AS fare_amount
+        FROM bookings b
+        LEFT JOIN users u ON b.user_id = u.user_id
+        LEFT JOIN drivers d ON b.driver_id = d.driver_id
+        WHERE b.booking_id = $booking_id AND b.user_id = $current_user_id
+        LIMIT 1";
 
     $result = $conn->query($sql);
     if ($result && $result->num_rows > 0) {
@@ -149,6 +160,8 @@ $sql = "INSERT INTO payments (
             ?>
         </select>
     </form>
+
+    <a href="customer_landing.php" class="btn btn-primary mb-4">⬅ Go Back</a>
 
     <?php if ($booking_id > 0): ?>
     <form method="POST">
