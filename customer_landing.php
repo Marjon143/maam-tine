@@ -307,9 +307,10 @@ $stmt->close();
       
 <a href="customer_feedback.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>📅</span><p style="margin: 0;">Feedback</p></a>
 <a href="payment.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>📅</span><p style="margin: 0;">Make Payment </p></a>
-<a href="history.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>📜</span><p style="margin: 0;">History</p></a>
+
 <a href="profile.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>👤</span><p style="margin: 0;">Profile</p></a>
 <a href="user_rating_driver.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>👤</span><p style="margin: 0;">Rate</p></a>
+<a href="route1.php" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>👤</span><p style="margin: 0;">Route</p></a>
 <a href="index.php" onclick="showLogoutModal()" class="nav" style="display: flex; align-items: center; gap: 6px; text-decoration: none; padding: 10px; border: 1px solid #ccc; border-radius: 6px; color: inherit;"><span>🚪</span><p style="margin: 0;">Logout</p></a>
 
 
