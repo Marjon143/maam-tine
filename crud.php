@@ -252,6 +252,10 @@ $fare_result = $conn->query("SELECT * FROM fares");
 <div class="container">
     <h2>Driver CRUD Operations</h2>
 
+     <a href="dashboard.php" style="display: inline-block; margin-bottom: 20px; background-color: #007bff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+        ← Go Back
+    </a>
+
     <div class="form-container">
         <form action="crud.php" method="POST">
             <input type="text" name="driverName" placeholder="Driver Name" required>

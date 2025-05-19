@@ -41,9 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $yearsExperience = $_POST['yearsExperience'];
     $imageURL = $_POST['driverImageURL'];
 
-    $sql = "UPDATE drivers SET name = ?, address = ?, email = ?, vehicle_type = ?, plate_number = ?, years_experience = ?, image_url = ? WHERE driver_id = ?";
+    $sql = "UPDATE drivers SET driver_name = ?, address = ?, email = ?, vehicle_type = ?, plate_number = ?, years_experience = ?, image_url = ? WHERE driver_id = ?";
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("sssssssi", $name, $address, $email, $vehicleType, $plateNumber, $yearsExperience, $imageURL, $driver_id);
+        $stmt->bind_param("sssssssi", $driver_name, $address, $email, $vehicleType, $plateNumber, $yearsExperience, $imageURL, $driver_id);
         if ($stmt->execute()) {
             echo "<p style='color: green; text-align: center;'>Driver details updated successfully.</p>";
         } else {
