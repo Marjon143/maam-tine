@@ -12,6 +12,19 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Automatically update driver status
+$conn->query("UPDATE drivers SET status = 'available'");
+$conn->query("
+    UPDATE drivers d
+    JOIN (
+        SELECT DISTINCT driver_id
+        FROM transactions
+        WHERE transaction_status = 'Ongoing'
+    ) AS busy_drivers
+    ON d.driver_id = busy_drivers.driver_id
+    SET d.status = 'busy'
+");
+
 // Fetch all transactions with driver name
 $sql = "SELECT t.*, driver_name AS driver_name 
         FROM transactions t
@@ -35,6 +48,7 @@ if ($result->num_rows > 0) {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,11 +59,7 @@ if ($result->num_rows > 0) {
 <body class="bg-light">
     <div class="container my-5">
         <!-- Go Back Button -->
-        <div class="mb-4">
-            <button onclick="history.back()" class="btn btn-secondary">
-                ← Go Back
-            </button>
-        </div>
+        <button type="button" class="go-back" onclick="window.location.href='dashboard.php'">Go Back</button>
 
         <h2 class="text-center mb-4">Transaction Records</h2>
         <div class="row">
@@ -64,7 +74,18 @@ if ($result->num_rows > 0) {
                                     <?= htmlspecialchars($row['name']) ?> -
                                     <span class="badge bg-warning text-dark"><?= htmlspecialchars($row['action']) ?></span>
                                 </h5>
-                                <p class="card-text mb-1"><strong>Driver:</strong> <?= htmlspecialchars($row['driver_name'] ?? 'N/A') ?></p>
+                                <p class="card-text mb-1">
+    <strong>Driver:</strong> <?= htmlspecialchars($row['driver_name'] ?? 'N/A') ?>
+    <?php
+        $driverStatusSql = "SELECT status FROM drivers WHERE driver_id = " . intval($row['driver_id']);
+        $driverStatusResult = $conn->query($driverStatusSql);
+        $statusRow = $driverStatusResult ? $driverStatusResult->fetch_assoc() : null;
+        if ($statusRow):
+    ?>
+        <span class="badge bg-secondary ms-2"><?= htmlspecialchars($statusRow['status']) ?></span>
+    <?php endif; ?>
+</p>
+
                                 <p class="card-text mb-1"><strong>Pickup:</strong> <?= htmlspecialchars($row['pickup_location']) ?></p>
                                 <p class="card-text mb-1"><strong>Dropoff:</strong> <?= htmlspecialchars($row['dropoff_location']) ?></p>
                                 <p class="card-text mb-1">

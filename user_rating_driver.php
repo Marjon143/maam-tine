@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['driver_id'], $_POST['
     $rating = intval($_POST['rating']);
 
     // Check if user has booked the driver
-    $bookingCheck = $conn->prepare("SELECT * FROM booking WHERE driver_id = ? AND user_id = ?");
+    $bookingCheck = $conn->prepare("SELECT * FROM bookings WHERE driver_id = ? AND user_id = ?");
     $bookingCheck->bind_param("ii", $driver_id, $user_id);
     $bookingCheck->execute();
     $bookingResult = $bookingCheck->get_result();
