@@ -148,7 +148,7 @@ $result = $conn->query($sql);
     </div>
 
     <div class="container text-center mt-4 mb-4">
-    <a href="customer_landing.php" class="btn btn-primary">Go Back</a>
+    <a href="dashboard.php" class="btn btn-primary">Go Back</a>
 </div>
 
     <?php $conn->close(); ?>

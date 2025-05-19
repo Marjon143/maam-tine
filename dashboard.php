@@ -87,7 +87,7 @@ $totalFeedback = $customerFeedbackCount + $driverFeedbackCount;
         <li><a href="#" id="active--link"><span class="icon icon-1"><i class="ri-layout-grid-line"></i></span><span class="sidebar--item">Dashboard</span></a></li>
         <li><a href="crud.php"><span class="icon icon-2"><i class="ri-calendar-2-line"></i></span><span class="sidebar--item">Create</span></a></li>
         <li><a href="transaction_admin.php"><span class="icon icon-3"><i class="ri-user-2-line"></i></span><span class="sidebar--item">Transactions</span></a></li>
-        <li><a href="availability.php"><span class="icon icon-4"><i class="ri-user-line"></i></span><span class="sidebar--item">Availability</span></a></li>
+        <li><a href="driver_info_admin.php"><span class="icon icon-4"><i class="ri-user-line"></i></span><span class="sidebar--item">Driver List</span></a></li>
         <li><a href="route.php"><span class="icon icon-5"><i class="ri-line-chart-line"></i></span><span class="sidebar--item">Routes</span></a></li>
         <li><a href="#"><span class="icon icon-6"><i class="ri-customer-service-line"></i></span><span class="sidebar--item">Reporting</span></a></li>
         </ul>

@@ -4,9 +4,10 @@ $username = "root";
 $password = "";
 $dbname = "ecarga";
 
-// Simulated logged-in user ID (replace with session-based user ID in a real system)
+// Simulated logged-in user ID (replace with session-based user ID in real system)
 $user_id = 1;
 
+// Database connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -17,27 +18,43 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['driver_id'], $_POST['
     $driver_id = intval($_POST['driver_id']);
     $rating = intval($_POST['rating']);
 
-    // Check if user has already rated the driver
-    $check = $conn->prepare("SELECT * FROM ratings WHERE driver_id = ? AND user_id = ?");
-    $check->bind_param("ii", $driver_id, $user_id);
-    $check->execute();
-    $result = $check->get_result();
+    // Check if user has booked the driver
+    $bookingCheck = $conn->prepare("SELECT * FROM booking WHERE driver_id = ? AND user_id = ?");
+    $bookingCheck->bind_param("ii", $driver_id, $user_id);
+    $bookingCheck->execute();
+    $bookingResult = $bookingCheck->get_result();
 
-    if ($result->num_rows === 0 && $rating >= 1 && $rating <= 5) {
-        // Insert new rating
-        $stmt = $conn->prepare("INSERT INTO ratings (driver_id, user_id, rating) VALUES (?, ?, ?)");
-        $stmt->bind_param("iii", $driver_id, $user_id, $rating);
-        $stmt->execute();
-        $stmt->close();
-        $message = "Thank you for rating!";
+    if ($bookingResult->num_rows > 0) {
+        // Check if user already rated this driver
+        $check = $conn->prepare("SELECT * FROM ratings WHERE driver_id = ? AND user_id = ?");
+        $check->bind_param("ii", $driver_id, $user_id);
+        $check->execute();
+        $result = $check->get_result();
+
+        if ($result->num_rows === 0 && $rating >= 1 && $rating <= 5) {
+            // Insert new rating
+            $stmt = $conn->prepare("INSERT INTO ratings (driver_id, user_id, rating) VALUES (?, ?, ?)");
+            $stmt->bind_param("iii", $driver_id, $user_id, $rating);
+            $stmt->execute();
+            $stmt->close();
+            $message = "Thank you for rating!";
+        } else {
+            $message = "You have already rated this driver or the rating is invalid.";
+        }
+        $check->close();
     } else {
-        $message = "You have already rated this driver or the rating is invalid.";
+        $message = "You can only rate drivers you have booked.";
     }
-    $check->close();
+    $bookingCheck->close();
 }
 
-// Fetch all available drivers
-$drivers = $conn->query("SELECT driver_id, driver_name FROM drivers WHERE status = 'available'");
+// Fetch only the drivers the user has booked
+$drivers = $conn->query("
+    SELECT d.driver_id, driver_name AS driver_name 
+    FROM drivers d
+    INNER JOIN bookings b ON d.driver_id = b.driver_id
+    WHERE b.user_id = $user_id
+");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +69,8 @@ $drivers = $conn->query("SELECT driver_id, driver_name FROM drivers WHERE status
             border: 1px solid #ccc;
             border-radius: 10px;
         }
-        h2{
+
+        h2 {
             text-align: center;
         }
 
@@ -94,7 +112,6 @@ $drivers = $conn->query("SELECT driver_id, driver_name FROM drivers WHERE status
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgb(0,0,0);
             background-color: rgba(0,0,0,0.4);
             padding-top: 60px;
         }
@@ -115,7 +132,6 @@ $drivers = $conn->query("SELECT driver_id, driver_name FROM drivers WHERE status
             cursor: pointer;
         }
 
-        /* Go Back Button */
         .go-back-btn {
             padding: 10px 20px;
             background-color: #f1f1f1;
@@ -126,7 +142,6 @@ $drivers = $conn->query("SELECT driver_id, driver_name FROM drivers WHERE status
             text-align: center;
             width: 100%;
         }
-
     </style>
 </head>
 <body>
@@ -140,12 +155,12 @@ $drivers = $conn->query("SELECT driver_id, driver_name FROM drivers WHERE status
         <select name="driver_id" id="driver_id" required>
             <option value="">-- Select Driver --</option>
             <?php
-            if ($drivers->num_rows > 0) {
+            if ($drivers && $drivers->num_rows > 0) {
                 while ($row = $drivers->fetch_assoc()) {
                     echo "<option value='{$row['driver_id']}'>{$row['driver_name']}</option>";
                 }
             } else {
-                echo "<option disabled>No available drivers</option>";
+                echo "<option disabled>No booked drivers</option>";
             }
             ?>
         </select><br><br>
@@ -178,7 +193,6 @@ $drivers = $conn->query("SELECT driver_id, driver_name FROM drivers WHERE status
 
 <script>
     function showModal() {
-        // Check if driver is selected and a rating is provided
         var driverId = document.getElementById("driver_id").value;
         var rating = document.querySelector('input[name="rating"]:checked');
 
@@ -194,7 +208,6 @@ $drivers = $conn->query("SELECT driver_id, driver_name FROM drivers WHERE status
     }
 
     function submitForm() {
-        // Submit the form
         document.getElementById("ratingForm").submit();
     }
 </script>
