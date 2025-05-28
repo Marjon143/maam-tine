@@ -2,7 +2,7 @@
 // customer_news.php
 
 // === REPLACE these with your actual API keys ===
-$weatherApiKey = 'your_actual_openweathermap_api_key_here';
+$weatherApiKey = 'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}';
 $newsApiKey = 'your_actual_newsapi_key_here';
 
 // Location for weather - you can change this or make dynamic later
@@ -26,6 +26,26 @@ $newsData = $newsJson ? json_decode($newsJson, true) : null;
   <style>
     body { font-family: Arial, sans-serif; background: #f4f7f9; margin: 0; padding: 0; }
     header { background: #007BFF; color: white; padding: 1rem; text-align: center; }
+    .navbar {
+      background-color: #0056b3;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: flex-start;
+      gap: 1rem;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      background-color: #007BFF;
+      transition: background-color 0.3s ease;
+      margin-left: 1500px    ;
+    }
+    .navbar a:hover {
+      background-color: #004080;
+    }
     .container { max-width: 900px; margin: 2rem auto; padding: 1rem; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; }
     .weather, .news { margin-bottom: 2rem; }
     .weather h2, .news h2 { border-bottom: 2px solid #007BFF; padding-bottom: 0.5rem; color: #333; }
@@ -43,6 +63,11 @@ $newsData = $newsJson ? json_decode($newsJson, true) : null;
   <header>
     <h1>Customer News & Weather</h1>
   </header>
+
+  <nav class="navbar">
+    <a href="bulletin.php">Click Here To See Phishing Bulletin</a>
+  </nav>
+
   <div class="container">
 
     <section class="weather">

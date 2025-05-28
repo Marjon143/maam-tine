@@ -1,172 +1,163 @@
 <?php
 session_start();
 
-$host = "localhost";
-$dbname = "ecarga";
-$username = "root";
-$password = "";
+$host = 'localhost';
+$db = 'ecarga';
+$user = 'root';
+$pass = '';
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Registration Logic
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
-    $name = $_POST['name'];
+$showModal = false;
+$error = "";
+
+if (!isset($_SESSION['login_attempts'])) {
+    $_SESSION['login_attempts'] = [];
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    $address = $_POST['address'];
-    $avatar_url = $_POST['avatar_url'];
+    $ip_address = $_SERVER['REMOTE_ADDR'];
 
-    if ($password !== $confirm_password) {
-        echo "Passwords do not match.";
-    } else {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        try {
-            $stmt = $pdo->prepare("INSERT INTO users (name, email, password, address, avatar_url) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$name, $email, $hashed_password, $address, $avatar_url]);
-
-            // ✅ Set OTP modal flag
-            $_SESSION['otp_email'] = $email;
-
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+    // Check if user is locked out
+    if (isset($_SESSION['login_attempts'][$email])) {
+        $attemptData = $_SESSION['login_attempts'][$email];
+        if (isset($attemptData['locked_until']) && time() < $attemptData['locked_until']) {
+            $remaining = $attemptData['locked_until'] - time();
+            header("Location: locked_out.php?remaining=" . $remaining);
+            exit();
         }
     }
-}
 
-// Login Logic
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    // reCAPTCHA secret key
+    $secretKey = '6LeWCkwrAAAAAMeByd-dNQixtxwwWMsFBO_FW49A';
 
-    try {
-        $stmt = $pdo->prepare("SELECT user_id, name, password FROM users WHERE email = ?");
-        $stmt->execute([$email]);
+    // Verify reCAPTCHA response
+    $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
+    $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+    $response = file_get_contents($verifyUrl . '?secret=' . $secretKey . '&response=' . $recaptchaResponse);
+    $responseData = json_decode($response);
 
-        if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['user_id'];
-                $_SESSION['user_name'] = $user['name'];
-                $_SESSION['login_success'] = true; // ✅ Set flag to show modal
-                // Redirect to same page to trigger modal
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
+    if (!$responseData->success) {
+        $error = "Please verify that you are not a robot.";
+    } else {
+        // Check user credentials
+        $stmt = $conn->prepare("SELECT user_id, password FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($user_id, $hashed_password);
+            $stmt->fetch();
+
+            if (password_verify($password, $hashed_password)) {
+                // Success: reset attempts and show modal
+                unset($_SESSION['login_attempts'][$email]);
+                $showModal = true;
             } else {
-                echo "Incorrect password.";
+                recordFailedAttempt($email, $ip_address, 'wrong_password', $user_id);
+                $error = "Invalid password.";
             }
         } else {
-            echo "Email not found.";
+            recordFailedAttempt($email, $ip_address, 'wrong_email', null);
+            $error = "Email not found.";
         }
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
     }
+}
+
+function recordFailedAttempt($email, $ip_address, $reason, $user_id = null) {
+    global $conn;
+
+    if (!isset($_SESSION['login_attempts'][$email])) {
+        $_SESSION['login_attempts'][$email] = [
+            'count' => 0,
+            'last_attempt' => 0,
+            'locked_until' => 0
+        ];
+    }
+    $attempts = &$_SESSION['login_attempts'][$email];
+
+    // Reset count if last attempt was more than 60 seconds ago
+    if (time() - $attempts['last_attempt'] > 60) {
+        $attempts['count'] = 0;
+        $attempts['locked_until'] = 0;
+    }
+
+    $attempts['count']++;
+    $attempts['last_attempt'] = time();
+
+    // Implement lockout logic
+    if ($attempts['count'] >= 3) {
+        if ($attempts['count'] == 3) {
+            // 4th attempt: lockout 30 seconds
+            $lockoutSeconds = 30;
+        } else {
+            // Subsequent attempts: incremental 1 minute per extra attempt after 4
+            $extraAttempts = $attempts['count'] - 1;
+            $lockoutSeconds = 30 + ($extraAttempts * 60);
+        }
+        $attempts['locked_until'] = time() + $lockoutSeconds;
+    } else {
+        // For attempts 1,2,3 no lockout
+        $attempts['locked_until'] = 0;
+    }
+
+    // Insert attempt into database
+    $insertStmt = $conn->prepare("INSERT INTO login_attempts (email, ip_address, reason, user_id) VALUES (?, ?, ?, ?)");
+    $insertStmt->bind_param("sssi", $email, $ip_address, $reason, $user_id);
+    $insertStmt->execute();
+    $insertStmt->close();
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>   
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Login & Register | eCarga</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- FontAwesome & CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>Login</title>
     <link rel="stylesheet" href="assets/login.css">
-    <script src="https://kit.fontawesome.com/2efc16a506.js" crossorigin="anonymous"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-    <div class="container" id="container">
-        <!-- Registration Form -->
-        <div class="form-container sign-up">
-            <form method="POST">
-                <h1>Sign Up</h1>
-                <input type="text" name="name" placeholder="Full Name" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-                <input type="text" name="address" placeholder="Address" required>
-                <input type="text" name="avatar_url" placeholder="Avatar Image URL" required>
-                <button type="submit" name="register">Sign Up</button>
-            </form>
-        </div>
+<div class="form-container">
+    <h2>Login</h2>
 
-        <!-- Login Form -->
-        <div class="form-container sign-in">
-            <form method="POST">
-                <h1>Login</h1>
-                <span>Login using your email & password</span>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <button type="submit" name="login">Login</button>
-            </form>
-        </div>
+    <?php if (!empty($error)) echo "<div class='message error'>$error</div>"; ?>
 
-        <!-- Toggle Panels -->
-        <div class="toggle-container">
-            <div class="toggle">
-                <div class="toggle-panel toggle-left">
-                    <h1>Welcome Back!</h1>
-                    <p>If you already have an account, login here.</p>
-                    <button class="hidden" id="login">Sign In</button>
-                </div>
-                <div class="toggle-panel toggle-right">
-                    <h1>Hello, Friend!</h1>
-                    <p>Don't have an account yet? Register here.</p>
-                    <button class="hidden" id="register">Sign Up</button>
-                </div>
-            </div>
-        </div>
+    <form method="POST" action="">
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <label>Password</label>
+        <input type="password" name="password" required>
+
+        <!-- Google reCAPTCHA widget -->
+        <div class="g-recaptcha" data-sitekey="6LeWCkwrAAAAAHWw40IC-Qqa0UqGFLLJZcKJQAEZ"></div>
+
+        <input type="submit" value="Login" style="margin-top:15px;">
+    </form>
+    <a href="register.php">Don't have an account? Register</a>
+</div>
+
+<!-- Success Modal -->
+<div id="successModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <p>Login successful! Redirecting...</p>
     </div>
+</div>
 
-    <!-- JS for toggling between forms -->
-    <script src="assets/login.js"></script>
-
-    <!-- ✅ OTP SENT MODAL -->
-    <?php if (isset($_SESSION['otp_email'])): ?>
-    <div id="otpModal" style="
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
-        z-index: 9999;">
-        <div style="
-            background: #fff; padding: 30px 40px; border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center;">
-            <h2>✅ OTP Sent!</h2>
-            <p>Please check your email to verify your account.</p>
-        </div>
-    </div>
-    <script>
-        // Auto-redirect to send_otp.php after 3 seconds
-        setTimeout(function () {
-            window.location.href = "send_otp.php?email=<?= urlencode($_SESSION['otp_email']) ?>";
-        }, 3000);
-    </script>
-    <?php unset($_SESSION['otp_email']); endif; ?>
-
-    <!-- ✅ LOGIN SUCCESS MODAL -->
-    <?php if (isset($_SESSION['login_success'])): ?>
-    <div id="loginSuccessModal" style="
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
-        z-index: 9999;">
-        <div style="
-            background: #fff; padding: 30px 40px; border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center;">
-            <h2>🎉 Login Successful!</h2>
-            <p>Redirecting to your dashboard...</p>
-        </div>
-    </div>
-    <script>
-        setTimeout(function () {
-            window.location.href = "customer_landing.php";
-        }, 2000);
-    </script>
-    <?php unset($_SESSION['login_success']); endif; ?>
+<?php if ($showModal): ?>
+<script>
+    document.getElementById('successModal').style.display = 'block';
+    setTimeout(function() {
+        window.location.href = 'customer_landing.php';
+    }, 2000);
+</script>
+<?php endif; ?>
 
 </body>
 </html>

@@ -21,32 +21,17 @@ $result = $stmt->get_result();
 <head>
   <meta charset="UTF-8">
   <title>Driver Transactions</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
-    th { background-color: #f4f4f4; }
-    .done-btn { background: #4CAF50; color: white; border: none; padding: 5px 10px; cursor: pointer; }
-    .done-btn:hover { background: #45a049; }
-    .modal {
-      display: none; position: fixed; z-index: 999;
-      left: 0; top: 0; width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center;
-    }
-    .modal-content {
-      background: white; padding: 20px; border-radius: 5px; width: 300px;
-      text-align: center;
-    }
-    .modal-buttons { margin-top: 20px; display: flex; justify-content: space-around; }
-    .modal-buttons button { padding: 5px 15px; }
-  </style>
+  <link rel="stylesheet" href="assets/transaction.css">
+  
 </head>
 <body>
+
+
 
 <h2>Transaction History</h2>
 
 <?php if (isset($_GET['updated'])): ?>
-  <div style="background: #dff0d8; padding: 10px; color: #3c763d;">✅ Transaction marked as done.</div>
+  <div class="alert-success">✅ Transaction marked as done.</div>
 <?php endif; ?>
 
 <table>
@@ -65,9 +50,17 @@ $result = $stmt->get_result();
         <td><?= htmlspecialchars($row['name']); ?></td>
         <td><?= htmlspecialchars($row['pickup_location']); ?></td>
         <td><?= htmlspecialchars($row['dropoff_location']); ?></td>
-        <td><?= $row['action']; ?></td>
-        <td><?= $row['transaction_status']; ?></td>
-        <td><?= $row['action_time']; ?></td>
+        <td><?= htmlspecialchars($row['action']); ?></td>
+        <td>
+          <?php if ($row['transaction_status'] === 'Done'): ?>
+            <span class="status-done">✅ Done</span>
+          <?php elseif ($row['transaction_status'] === 'Ongoing'): ?>
+            <span class="status-ongoing">Ongoing</span>
+          <?php else: ?>
+            <?= htmlspecialchars($row['transaction_status']); ?>
+          <?php endif; ?>
+        </td>
+        <td><?= htmlspecialchars($row['action_time']); ?></td>
         <td>
           <?php if ($row['transaction_status'] === 'Done'): ?>
             ✅ Done
@@ -80,7 +73,7 @@ $result = $stmt->get_result();
       </tr>
     <?php endwhile; ?>
   <?php else: ?>
-    <tr><td colspan="7">No transactions found.</td></tr>
+    <tr><td colspan="7" style="text-align: center;">No transactions found.</td></tr>
   <?php endif; ?>
 </table>
 
@@ -97,6 +90,7 @@ $result = $stmt->get_result();
     </form>
   </div>
 </div>
+<a href="driver_side_landing.php" class="btn">← Go Back</a>
 
 <script>
   function openModal(transactionId) {

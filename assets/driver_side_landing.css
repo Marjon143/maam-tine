@@ -1,117 +1,243 @@
+/* Reset and Base */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f6f8;
+  color: #333;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      background: #1e88e5;
-      color: white;
-      padding: 15px 20px;
-    }
-    .header-content {
-      display: flex;
-      align-items: center;
-    }
-    .avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid white;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
-    }
-    .welcome-text {
-      margin-left: 15px;
-      font-size: 1.5em;
-    }
-    .container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-      gap: 20px;
-      overflow-y: auto;
-    }
-    .section {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    h2 {
-      margin-top: 0;
-      color: #333;
-    }
-    .booking-item, .news-item {
-      border-bottom: 1px solid #ddd;
-      padding: 10px 0;
-    }
-    .gas-price {
-      font-size: 1.5em;
-      color: #388e3c;
-      margin-top: 10px;
-    }
-    footer {
-      background: #eee;
-      padding: 20px;
-      text-align: center;
-    }
-    .footer-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-    .footer-section {
-      flex: 1 1 300px;
-      text-align: left;
-    }
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      resize: vertical;
-    }
-    button.submit-feedback {
-      margin-top: 10px;
-      padding: 8px 15px;
-      background-color: #1e88e5;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .payment-info {
-      font-size: 1.1em;
-      color: #333;
-    }
-    button.accept-btn {
-      margin-top: 8px;
-      padding: 6px 12px;
-      background: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .deny-btn {
-  background-color: #e74c3c;
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+.welcome-text {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.logout-btn {
+  padding: 10px 18px;
+  background-color: #d9534f;
   color: white;
-  padding: 5px 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: #c9302c;
+}
+
+/* Success Alert */
+.success-alert {
+  background: #dff0d8;
+  color: #3c763d;
+  padding: 12px 20px;
+  margin: 20px auto;
+  border-radius: 8px;
+  max-width: 800px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+/* Section Cards */
+.section {
+  background: #ffffff;
+  padding: 20px 25px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.section h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: #222;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+/* News */
+.news-item {
+  padding: 6px 0;
+  font-size: 16px;
+}
+
+/* Booking Cards */
+.booking-item {
+  background: #fefefe;
+  padding: 16px;
+  margin: 12px 0;
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.03);
+}
+
+.booking-item strong {
+  display: inline-block;
+  width: 80px;
+}
+
+.booking-form {
+  display: inline-block;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.accept-btn,
+.deny-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.accept-btn {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.accept-btn:hover {
+  background-color: #4cae4c;
+}
+
+.deny-btn {
+  background-color: #f0ad4e;
+  color: white;
 }
 
 .deny-btn:hover {
-  background-color: #c0392b;
+  background-color: #ec971f;
 }
 
-  
+/* Gas Prices */
+.gas-price {
+  font-weight: bold;
+}
+
+/* Footer Navigation */
+.footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 15px;
+  background: #ffffff;
+  border-top: 1px solid #ddd;
+  position: sticky;
+  bottom: 0;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.nav:hover {
+  background: #eaeaea;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.nav p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal {
+  background: white;
+  width: 90%;
+  max-width: 400px;
+  margin: 12% auto;
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.modal h3 {
+  margin-top: 0;
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  margin: 10px 5px 0 5px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.logout-confirm {
+  background-color: #d9534f;
+  color: white;
+}
+
+.logout-confirm:hover {
+  background-color: #c9302c;
+}
+
+.cancel-btn {
+  background-color: #5bc0de;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #31b0d5;
+}

@@ -1,7 +1,6 @@
 <?php
 session_start();
 $user_id = $_SESSION['user_id'] ?? null;
-
 if (!$user_id) {
     header("Location: auth.php");
     exit();
@@ -12,7 +11,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// ✅ fix: load only current user’s name and avatar_url
+// Fetch user info
 $sql = "SELECT name, avatar_url FROM users WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
@@ -20,6 +19,21 @@ $stmt->execute();
 $stmt->bind_result($username, $avatar_url);
 $stmt->fetch();
 $stmt->close();
+
+// Provide fallback avatar
+if (empty($avatar_url)) {
+    $avatar_url = 'https://via.placeholder.com/80?text=No+Image';
+}
+
+// Fetch unread notification count (fix field name from read to read_status)
+$sql = "SELECT COUNT(*) FROM login_attempts WHERE user_id = ? AND read_status = 0";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($unreadCount);
+$stmt->fetch();
+$stmt->close();
+
 ?>
 
   <!DOCTYPE html>
@@ -31,12 +45,57 @@ $stmt->close();
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header>
-      <div class="header-left">
-        <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" class="flag" alt="App Logo" />
-        <h1>E<span>CARGA</span> <span class="beta">TM</span></h1>
-      </div>
-    </header>
+   <header>
+    <style>
+      header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.header-right {
+  position: relative;
+}
+
+.notification-icon {
+  position: relative;
+  font-size: 24px;
+  color: #333;
+  text-decoration: none;
+}
+
+.notif-count {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+    </style>
+  <div class="header-left">
+    <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" class="flag" alt="App Logo" />
+    <h1>E<span>CARGA</span> <span class="beta">TM</span></h1>
+  </div>
+
+  <div class="header-right">
+    <a href="notification.php" class="notification-icon">
+        🔔
+        <?php if (isset($unreadCount) && $unreadCount > 0): ?>
+            <span class="notif-count"><?= $unreadCount ?></span>
+        <?php endif; ?>
+    </a>
+</div>
+
+
+</header>
+
 
     <main>
       <section class="welcome">

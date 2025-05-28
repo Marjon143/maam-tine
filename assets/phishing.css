@@ -1,0 +1,166 @@
+
+    /* Reset & base */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+    body {
+        background: #f9fafc;
+        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0; padding: 2rem;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    .container {
+        max-width: 720px;
+        width: 100%;
+        background: #fff;
+        padding: 2rem 3rem;
+        border-radius: 10px;
+        box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+    }
+    h1 {
+        margin-bottom: 1rem;
+        font-weight: 700;
+        color: #2c3e50;
+        text-align: center;
+        letter-spacing: 1px;
+    }
+    form {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1.75rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    input[type="text"] {
+        flex-grow: 1;
+        min-width: 220px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        transition: border-color 0.25s ease;
+    }
+    input[type="text"]:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+    }
+    button {
+        background: #3498db;
+        border: none;
+        color: white;
+        padding: 0.75rem 1.75rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.25s ease;
+        box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+    }
+    button:hover {
+        background: #2980b9;
+    }
+    h3 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    p.result {
+        padding: 1rem;
+        border-radius: 6px;
+        font-weight: 600;
+        max-width: 100%;
+        word-break: break-word;
+    }
+    p.result.suspicious {
+        background-color: #ffe6e6;
+        color: #cc0000;
+        border: 1px solid #cc0000;
+    }
+    p.result.invalid {
+        background-color: #fff4e5;
+        color: #d35400;
+        border: 1px solid #d35400;
+    }
+    p.result.safe {
+        background-color: #e6ffed;
+        color: #27ae60;
+        border: 1px solid #27ae60;
+    }
+    h2 {
+        margin-top: 2rem;
+        font-weight: 700;
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 0.25rem;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 0.95rem;
+    }
+    thead {
+        background-color: #3498db;
+        color: white;
+    }
+    th, td {
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+        text-align: left;
+        vertical-align: middle;
+    }
+    tbody tr:nth-child(even) {
+        background-color: #f4f6f8;
+    }
+    tbody tr:hover {
+        background-color: #dbeeff;
+    }
+    @media (max-width: 600px) {
+        .container {
+            padding: 1.5rem 1.5rem;
+        }
+        form {
+            flex-direction: column;
+        }
+        input[type="text"], button {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+        thead tr {
+            display: none;
+        }
+        tbody tr {
+            margin-bottom: 1.25rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 0.75rem;
+            background-color: #fff;
+        }
+        tbody td {
+            padding-left: 50%;
+            position: relative;
+            text-align: left;
+            border: none;
+            border-bottom: 1px solid #eee;
+        }
+        tbody td::before {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+        }
+        tbody td:nth-of-type(1)::before { content: "URL"; }
+        tbody td:nth-of-type(2)::before { content: "Result"; }
+        tbody td:nth-of-type(3)::before { content: "Checked At"; }
+    }
+    
